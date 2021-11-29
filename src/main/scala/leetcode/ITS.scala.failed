@@ -1,0 +1,105 @@
+package leetcode
+
+import LIS._
+
+object ITS {
+  /**
+   * 334. Increasing Triplet Subsequence
+   *
+   *
+   */
+
+    /*
+    *
+    * TODO: Fails b/c it doesn't consider valid sequences after a poisoning, high value. So in [20,100,10,12,5,13],
+    * it records 20, then 100 and then can't find 10, 12, 13 later b/c 100 is the last recorded number.
+    *
+    * To fix this, try first mapping all in given array to a sequence that starts with the current number, so :
+    * [
+    *  [ 20, 100, 10, 12, 5, 13 ]
+    *  [ 100, 10, 12, 5, 13 ]
+    *  [ 10, 12, 5, 13 ]
+    *  [ 12, 5, 13 ]
+    *  [ 5, 13 ]
+    *  [ 13 ]
+    * ]
+    *
+    * .. then reduce these using the foldleft we have right now, then return true if any of the vectors in vector have size >= 3
+    *
+    * A possible optimization of this is to skip the last 2 lists
+    *
+    * !!insight!! Another possible optimization is to only generate the sequence for the current position in the sequence
+    * ( that way they wouldn't need to be pre-generated)
+    *
+    */
+
+  def isLegal(nums: Array[Int]): Boolean = {
+    val ixes = nums.zipWithIndex.foldLeft(Vector[(Int, Int)]()) { (v: Vector[(Int, Int)], n) =>
+      val num = n._1
+      val ix = n._2
+
+      if (v.isEmpty) {
+        val nn = v :+ (num, ix)
+        println(s"beginning: $nn")
+        nn
+      }
+      else if (v.last._1 < num) {
+        val nn = v :+ (num, ix)
+        println(s"intermed after add: $nn")
+        nn
+      }
+      else {
+        println(s"intermed with no change: $v; last: ${v.last._1}; num: ${num}")
+        v
+      }
+    }
+
+    println(s"ixes: $ixes")
+    ixes.size >= 3
+  }
+
+  def permute(nums: Array[Int]): Seq[Array[Int]] = {
+    (0 until nums.size).map { n: Int =>
+      nums.slice(n, nums.size)
+    }
+  }
+
+  def failingLookback(nums: Array[Int]): Boolean = {
+
+    // inefficient; could use tailrec instead
+    val indexed = nums.zipWithIndex
+
+    for(n <- indexed) {
+      var ix = n._1
+      var num = n._2
+
+      if (ix > 3) {
+        val series = nums.slice(0, ix).foldRight(Vector[Int]()) { (r, acc) =>
+          if (acc.isEmpty || acc.last > r) acc :+ r
+          else acc
+        }
+        println(s"series: $series")
+
+        if (series.size >= 3) return true
+      }
+      // TODO: untested, but we know this would be screwed up by a sequence [1,1,3] b/c we only evaluate (at 3) that the previous values are less than it. (would be a problem if they weren't strictly increasing too, like [1,0,3]. So we need to keep track of how many previous values met our rule of < (current) by working backwards through the list from the current point, dropping any that are >= (current) and then counting how many
+    }
+
+
+    return false
+
+    //permute(nums).foreach { se: Array[Int] =>
+    //  if(isLegal(se)) {
+    //    return true
+    //  }
+    //}
+
+    //return false
+  }
+
+
+  def increasingTriplet(nums: Array[Int]): Boolean = {
+    LIS.psortPhase1(nums.toVector).size >= 3
+  }
+
+}
