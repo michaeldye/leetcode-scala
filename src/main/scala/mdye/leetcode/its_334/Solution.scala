@@ -1,13 +1,10 @@
-package leetcode
+package mdye.leetcode.its_334
+
+// Problem: https://leetcode.com/problems/increasing-triplet-subsequence/
 
 import scala.annotation.tailrec
 
-object ITS {
-  /**
-   * 334. Increasing Triplet Subsequence
-   *
-   *
-   */
+object Solution {
 
   // clipped from LIS solution
   def record(piles: Array[Array[Int]], c: Int): (Boolean, Array[Array[Int]]) = {
@@ -38,7 +35,7 @@ object ITS {
       }
 
       // early return
-      if (out.size == lim) return true
+      if (out.length == lim) return true
     }
 
     return false
@@ -63,7 +60,7 @@ object ITS {
      * - Initially we used a Vector b/c Array is sort of lame and just exists for compat, *but* the difference in speed
      * matters compared with other Scala solutions so we avoid the conversion
      *
-     **/
+     * */
 
     @tailrec
     def highLowRec(nums: Array[Int], min: Int, mid: Int, ix: Int): Boolean = {

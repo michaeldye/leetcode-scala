@@ -1,7 +1,8 @@
-package leetcode
+package mdye.leetcode.median_of_arrays_4
 
-object MedianOfArrays_4 {
+// Problem: https://leetcode.com/problems/median-of-two-sorted-arrays/
 
+object Solution {
 
   def mergeSorted(nums1: Array[Int], nums2: Array[Int]): Array[Int] = {
     val n2Lazy = nums2.view
